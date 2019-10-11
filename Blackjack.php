@@ -10,6 +10,7 @@ class Blackjack
     }
     public function stand (){
 
+
     }
 
     public function surrender (){
