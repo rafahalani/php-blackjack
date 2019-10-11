@@ -18,10 +18,9 @@
 ?>
 
 <div class="container">
-    <button type="button" class="btn btn-success">START</button>
-    <button type="button" class="btn btn-danger">HIT</button>
-    <button type="button" class="btn btn-info">STAND</button>
-    <button type="button" class="btn btn-warning">SURRENDER</button>
+    <form method="get" action="game.php">
+    <button  type="button" class="btn btn-success"> <a href="game.php">START</a></button>
+    </form>
 </div>
 </body>
 </html>
