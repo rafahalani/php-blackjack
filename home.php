@@ -14,12 +14,11 @@
     <title>blackjack-home</title>
 </head>
 <body>
-<?php require ('game.php');
-?>
+
 
 <div class="container">
     <form method="get" action="game.php">
-    <button  type="button" class="btn btn-success"> <a href="game.php">START</a></button>
+    <button  type="submit" name="start" value="game"> START</button>
     </form>
 </div>
 </body>
