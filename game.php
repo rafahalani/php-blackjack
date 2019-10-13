@@ -3,40 +3,48 @@ declare(strict_types=1);
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
-require ('Blackjack.php');
+require('Blackjack.php');
 session_start();
+$stand = 0;
+$surrender = 0;
+$_SESSION["button"] = "";
+$_SESSION["meesage"] = "";
+
 /*$player = new Blackjack();
 $player -> hit();
 $dealer = new Blackjack();
 $dealer ->hit();*/
 startGame();
-function startGame ()
+function startGame()
 {
     if (!isset($_SESSION["player"]) && !isset($_SESSION["dealer"])) {
         $_SESSION["player"] = new Blackjack(0);
         $_SESSION["dealer"] = new Blackjack(0);
     }
 }
+
 // you can call the getter to see the score of the object
 // $lost= false;
-if (isset($_REQUEST["action"])){
-    if ($_REQUEST["action"] == 'hit'){
+//$_REQUEST : An associative array that by default contains the contents of $_GET, $_POST and $_COOKIE.
+if (isset($_REQUEST["action"])) {
+    if ($_REQUEST["action"] == "hit") {
         $_SESSION["player"]->hit();
-        if ($_SESSION["player"]->getScore() >= 21){
+        if ($_SESSION["player"]->getScore() >= 21) {
             $_SESSION["player"]->stand($_SESSION["dealer"]);
         }
     }
-    if ($_REQUEST["action"] == 'stand'){
-        $_SESSION["player"] ->stand($_SESSION["dealer"]);
+    if ($_REQUEST["action"] == "stand") {
+        $_SESSION["player"]->stand($_SESSION["dealer"]);
     }
-    if ($_REQUEST["action"] == 'surrender'){
+    if ($_REQUEST["action"] == "surrender") {
         $_SESSION["player"]->surrender($_SESSION["dealer"]);
     }
-    if ($_REQUEST["action"] == 'new'){
+    if ($_REQUEST["action"] == 'new') {
         resetGame();
     }
 }
-function resetGame () {
+function resetGame()
+{
     unset($_SESSION['player']);
     unset($_SESSION['dealer']);
     startGame();
@@ -44,7 +52,8 @@ function resetGame () {
 
 //ask about the session is it set or not
 
-function whatIsHappening() {
+function whatIsHappening()
+{
     echo '<h2>$_GET</h2>';
     var_dump($_GET);
     echo '<h2>$_POST</h2>';
@@ -54,6 +63,7 @@ function whatIsHappening() {
     echo '<h2>$_SESSION</h2>';
     var_dump($_SESSION);
 }
+
 whatIsHappening();
 ?>
 
@@ -72,10 +82,10 @@ whatIsHappening();
 </head>
 <body>
 <div>
-<form action="Blackjack.php" method="post">
-<button type="submit"  name="action" value=hit" >HIT</button>
-    <button type="submit" name="action" value="stand" >STAND</button>
-    <button type="submit" name="action" value="surrender">SURRENDER</button>
+    <form action="Blackjack.php" method="post">
+        <button type="submit" name="action" value="hit">HIT</button>
+        <button type="submit" name="action" value="stand">STAND</button>
+        <button type="submit" name="action" value="surrender">SURRENDER</button>
     </form>
 </div>
 </body>

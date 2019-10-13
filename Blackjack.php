@@ -11,6 +11,7 @@ class Blackjack
     const MINIMUM = 1;
     const MAXIMUM = 11;
     const Blackjack_MAX = 21;
+    const Dealer_Max = 16;
     public $valuecards = array();
 
 
@@ -50,10 +51,10 @@ class Blackjack
 
     public function stand (Blackjack $dealer)
     {
-        while ($dealer->getScore()< 16){
+        while ($dealer->getScore()< self::Dealer_Max){
             $dealer->hit();
         }
-        if ($this->getScore()<=21){
+        if ($this->getScore()<=self::Blackjack_MAX){
            if($this->getScore() > $dealer->getScore()){
                $this->message="YOU WIN!";
            }
