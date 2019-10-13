@@ -8,50 +8,52 @@ session_start();
 $stand = 0;
 $surrender = 0;
 $_SESSION["button"] = "";
-$_SESSION["meesage"] = "";
+$_SESSION["message"] = "";
 
 /*$player = new Blackjack();
 $player -> hit();
 $dealer = new Blackjack();
 $dealer ->hit();*/
-startGame();
-function startGame()
-{
-    if (!isset($_SESSION["player"]) && !isset($_SESSION["dealer"])) {
-        $_SESSION["player"] = new Blackjack(0);
-        $_SESSION["dealer"] = new Blackjack(0);
-    }
+function finish () {
+    $_SESSION['player-score'] = null;
+    $_SESSION['dealer-score'] = null;
 }
 
-// you can call the getter to see the score of the object
-// $lost= false;
-//$_REQUEST : An associative array that by default contains the contents of $_GET, $_POST and $_COOKIE.
-if (isset($_REQUEST["action"])) {
-    if ($_REQUEST["action"] == "hit") {
-        $_SESSION["player"]->hit();
-        if ($_SESSION["player"]->getScore() >= 21) {
-            $_SESSION["player"]->stand($_SESSION["dealer"]);
-        }
-    }
-    if ($_REQUEST["action"] == "stand") {
-        $_SESSION["player"]->stand($_SESSION["dealer"]);
-    }
-    if ($_REQUEST["action"] == "surrender") {
-        $_SESSION["player"]->surrender($_SESSION["dealer"]);
-    }
-    if ($_REQUEST["action"] == 'new') {
-        resetGame();
-    }
-}
-function resetGame()
-{
-    unset($_SESSION['player']);
-    unset($_SESSION['dealer']);
-    startGame();
-}
 
+if (isset($_SESSION['player-score'])) {
+    $player = new Blackjack($_SESSION['player-score']);
+} else {
+    $player = new Blackjack(0,[]);
+}
+if (isset($_SESSION['dealer-score'])){
+    $dealer = new Blackjack($_SESSION['dealer-score']);
+
+} else {
+    $dealer = new Blackjack(0,[]);
+
+}
 //ask about the session is it set or not
 
+if (!isset($_GET["action"])){
+    if ($_GET["action"] == "hit"){
+        $player->hit();
+        $_SESSION['player-score'] = $player->getScore();
+        if($_SESSION['player-score'] > 21){
+            $_SESSION['message'] = "YOU LOSE";
+        }
+        if ($_SESSION['player-score'] == 21){
+            $_SESSION['message'] = "YOU WIN";
+        }
+    }
+if($_GET["action"] == "stand") {
+    $stand = 1;
+    $player->stand();
+    }
+if($_GET["action"] == "surrender"){
+    $surrender = 1 ;
+    $player->surrender($_SESSION['dealer']);
+}
+}
 function whatIsHappening()
 {
     echo '<h2>$_GET</h2>';
@@ -65,6 +67,7 @@ function whatIsHappening()
 }
 
 whatIsHappening();
+
 ?>
 
 <!doctype html>
@@ -81,6 +84,33 @@ whatIsHappening();
     <title>blackjack-home</title>
 </head>
 <body>
+<div class="game">
+    <?php
+    if(isset($_SESSION['player-score']) && $stand == 0 && $surrender == 0){
+        echo "YOUR SCORE IS:" . $_SESSION['player-score'] . "</br>";
+    if($_SESSION['player-score'] == 21){
+        finish();
+        echo "</br>" . $_SESSION['button'] . "</br>";
+    }
+    if (($_SESSION['player-score'] > 21)) {
+        finish();
+        echo "</br>" . $_SESSION['button'] . "</br>";
+    }
+    }
+    if($stand == 1){
+        echo $_SESSION['message']."<br/>";
+        echo "Your score is ".$_SESSION['player-score']."<br/>";
+        echo "Dealer score is ".$_SESSION['dealer-score']."<br/>";
+        finish();
+        echo "<br/>".$_SESSION['button']."<br/>";
+    }
+    if($surrender == 1){
+        echo $_SESSION['message'];
+        finish();
+        echo "<br/>".$_SESSION['button']."<br/>";
+    }
+    ?>
+</div>
 <div>
     <form action="Blackjack.php" method="post">
         <button type="submit" name="action" value="hit">HIT</button>
